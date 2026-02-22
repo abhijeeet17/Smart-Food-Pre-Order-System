@@ -1,0 +1,132 @@
+{% extends 'orders/base.html' %}
+
+{% block title %}Home | LPU Smart Food System{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section style="background: linear-gradient(135deg, #8B1A1A, #C8963E); color: white; padding: 80px 0;">
+  <div class="container text-center">
+    <h1 class="display-4 fw-bold mb-3">🍽️ LPU Smart Food System</h1>
+    <p class="lead mb-4">Pre-order your food, skip the queue. Pick up at your break time!</p>
+    {% if user.is_authenticated %}
+      <a href="{% url 'menu' %}" class="btn btn-warning btn-lg px-5 me-3">
+        <i class="bi bi-grid me-2"></i>Browse Menu
+      </a>
+      <a href="{% url 'my_orders' %}" class="btn btn-outline-light btn-lg px-5">
+        <i class="bi bi-bag me-2"></i>My Orders
+      </a>
+    {% else %}
+      <a href="{% url 'register' %}" class="btn btn-warning btn-lg px-5 me-3">
+        <i class="bi bi-person-plus me-2"></i>Get Started
+      </a>
+      <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-5">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5">Why Use Our System?</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="card h-100 text-center p-4">
+          <div class="fs-1 mb-3">⏱️</div>
+          <h5 class="fw-bold">Save Time</h5>
+          <p class="text-muted">Pre-order during class and pick up ready food at your break.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 text-center p-4">
+          <div class="fs-1 mb-3">👥</div>
+          <h5 class="fw-bold">No Crowd</h5>
+          <p class="text-muted">Distributed time slots prevent congestion at food stalls.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 text-center p-4">
+          <div class="fs-1 mb-3">🤖</div>
+          <h5 class="fw-bold">AI Powered</h5>
+          <p class="text-muted">Smart demand prediction ensures food is always available.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 text-center p-4">
+          <div class="fs-1 mb-3">📱</div>
+          <h5 class="fw-bold">Easy to Use</h5>
+          <p class="text-muted">Simple interface to browse, order, and track your food.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stalls Section -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5">Our Food Stalls</h2>
+    <div class="row g-4">
+      {% for stall in stalls %}
+      <div class="col-md-4">
+        <div class="card h-100">
+          {% if stall.image %}
+            <img src="{{ stall.image.url }}" class="card-img-top" style="height:200px;object-fit:cover;" alt="{{ stall.name }}">
+          {% else %}
+            <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;font-size:4rem;">🍲</div>
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title fw-bold">{{ stall.name }}</h5>
+            <p class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ stall.location }}</p>
+            <p class="card-text">{{ stall.description|truncatechars:80 }}</p>
+            <span class="badge bg-success">Open Now</span>
+          </div>
+          <div class="card-footer bg-transparent">
+            <a href="{% url 'menu' %}?stall={{ stall.id }}" class="btn btn-primary w-100">
+              View Menu <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center text-muted py-5">
+        <i class="bi bi-shop fs-1"></i>
+        <p class="mt-3">No stalls available right now. Check back later!</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5">How It Works</h2>
+    <div class="row g-4 text-center">
+      <div class="col-md-3">
+        <div class="rounded-circle bg-danger text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px;height:60px;font-size:1.5rem;">1</div>
+        <h6 class="fw-bold">Register / Login</h6>
+        <p class="text-muted small">Create your student account</p>
+      </div>
+      <div class="col-md-3">
+        <div class="rounded-circle bg-warning text-dark d-inline-flex align-items-center justify-content-center mb-3" style="width:60px;height:60px;font-size:1.5rem;">2</div>
+        <h6 class="fw-bold">Browse Menu</h6>
+        <p class="text-muted small">Choose items from any stall</p>
+      </div>
+      <div class="col-md-3">
+        <div class="rounded-circle bg-info text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px;height:60px;font-size:1.5rem;">3</div>
+        <h6 class="fw-bold">Select Time Slot</h6>
+        <p class="text-muted small">Pick your preferred break time</p>
+      </div>
+      <div class="col-md-3">
+        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px;height:60px;font-size:1.5rem;">4</div>
+        <h6 class="fw-bold">Pickup & Enjoy!</h6>
+        <p class="text-muted small">Food ready when you arrive</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

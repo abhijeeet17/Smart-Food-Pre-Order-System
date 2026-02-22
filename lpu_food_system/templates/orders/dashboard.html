@@ -1,0 +1,192 @@
+{% extends 'orders/base.html' %}
+
+{% block title %}Admin Dashboard | LPU Food System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h2 class="fw-bold mb-0"><i class="bi bi-speedometer2 me-2"></i>Stall Owner Dashboard</h2>
+    <p class="mb-0 opacity-75">Today: {{ today }}</p>
+  </div>
+</div>
+
+<div class="container pb-5">
+
+  <!-- Stats Cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card p-4 text-center" style="border-left: 5px solid #8B1A1A;">
+        <div class="fs-1 fw-bold text-danger">{{ total_orders_today }}</div>
+        <p class="text-muted mb-0">Orders Today</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-4 text-center" style="border-left: 5px solid #28a745;">
+        <div class="fs-1 fw-bold text-success">₹{{ revenue_today|floatformat:0 }}</div>
+        <p class="text-muted mb-0">Revenue Today</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-4 text-center" style="border-left: 5px solid #0d6efd;">
+        <div class="fs-1 fw-bold text-primary">{{ todays_orders|length }}</div>
+        <p class="text-muted mb-0">Active Orders</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card p-4 text-center" style="border-left: 5px solid #ffc107;">
+        <div class="fs-1">🤖</div>
+        <p class="text-muted mb-0">AI Predictions Active</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Today's Orders Table -->
+    <div class="col-md-7">
+      <div class="card p-3 h-100">
+        <h5 class="fw-bold mb-3"><i class="bi bi-list-check me-2"></i>Today's Orders</h5>
+        {% if todays_orders %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Student</th>
+                <th>Slot</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Update</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in todays_orders %}
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.student.get_full_name|default:order.student.username }}</td>
+                <td><small>{{ order.time_slot }}</small></td>
+                <td>₹{{ order.total_amount }}</td>
+                <td>
+                  <span class="badge badge-status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </td>
+                <td>
+                  <select class="form-select form-select-sm status-select" data-order="{{ order.id }}" style="width:120px;">
+                    <option value="pending"    {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="confirmed"  {% if order.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                    <option value="preparing"  {% if order.status == 'preparing' %}selected{% endif %}>Preparing</option>
+                    <option value="ready"      {% if order.status == 'ready' %}selected{% endif %}>Ready</option>
+                    <option value="completed"  {% if order.status == 'completed' %}selected{% endif %}>Completed</option>
+                    <option value="cancelled"  {% if order.status == 'cancelled' %}selected{% endif %}>Cancel</option>
+                  </select>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-inbox fs-1"></i>
+          <p class="mt-2">No orders today yet.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- AI Predictions -->
+    <div class="col-md-5">
+      <div class="card p-3 h-100">
+        <h5 class="fw-bold mb-3"><i class="bi bi-robot me-2"></i>AI Demand Prediction</h5>
+        <p class="text-muted small mb-3">Predicted lunch slot orders for today. Prepare accordingly!</p>
+        {% for pred in ai_predictions %}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <p class="mb-0 fw-semibold">{{ pred.item.name }}</p>
+            <small class="text-muted">{{ pred.item.stall.name }}</small>
+          </div>
+          <div class="text-end">
+            <span class="badge bg-primary fs-6">{{ pred.predicted_demand }}</span>
+            <br><small class="text-muted">predicted orders</small>
+          </div>
+        </div>
+        <div class="progress mb-3" style="height:6px;">
+          <div class="progress-bar bg-primary" style="width: {% widthratio pred.predicted_demand 60 100 %}%"></div>
+        </div>
+        {% empty %}
+        <p class="text-muted">Add food items to see predictions.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Slot Demand Bar Chart -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card p-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-bar-chart me-2"></i>Orders Per Time Slot (Today)</h5>
+        <canvas id="slotChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // ─── Order Status Update via AJAX ───────────────────────────────────────────
+  document.querySelectorAll('.status-select').forEach(function(select) {
+    select.addEventListener('change', function() {
+      const orderId = this.dataset.order;
+      const newStatus = this.value;
+      const formData = new FormData();
+      formData.append('status', newStatus);
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+      fetch(`/dashboard/order/${orderId}/status/`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          // Flash green border to confirm
+          select.style.borderColor = '#28a745';
+          setTimeout(() => select.style.borderColor = '', 1500);
+        }
+      });
+    });
+  });
+
+  // ─── Slot Demand Chart ───────────────────────────────────────────────────────
+  const slotLabels = [
+    {% for s in slot_demand %}'{{ s.slot_time }}',{% endfor %}
+  ];
+  const slotCounts = [
+    {% for s in slot_demand %}{{ s.order_count }},{% endfor %}
+  ];
+
+  new Chart(document.getElementById('slotChart'), {
+    type: 'bar',
+    data: {
+      labels: slotLabels,
+      datasets: [{
+        label: 'Number of Orders',
+        data: slotCounts,
+        backgroundColor: 'rgba(139, 26, 26, 0.8)',
+        borderColor: 'rgba(139, 26, 26, 1)',
+        borderWidth: 1,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+      }
+    }
+  });
+</script>
+{% endblock %}

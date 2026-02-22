@@ -1,0 +1,204 @@
+[
+  {
+    "model": "orders.breaktimeslot",
+    "pk": 1,
+    "fields": {
+      "slot_time": "10:00-10:30",
+      "max_capacity": 50
+    }
+  },
+  {
+    "model": "orders.breaktimeslot",
+    "pk": 2,
+    "fields": {
+      "slot_time": "12:00-12:30",
+      "max_capacity": 80
+    }
+  },
+  {
+    "model": "orders.breaktimeslot",
+    "pk": 3,
+    "fields": {
+      "slot_time": "13:00-13:30",
+      "max_capacity": 80
+    }
+  },
+  {
+    "model": "orders.breaktimeslot",
+    "pk": 4,
+    "fields": {
+      "slot_time": "15:00-15:30",
+      "max_capacity": 50
+    }
+  },
+  {
+    "model": "orders.breaktimeslot",
+    "pk": 5,
+    "fields": {
+      "slot_time": "17:00-17:30",
+      "max_capacity": 40
+    }
+  },
+  {
+    "model": "orders.foodstall",
+    "pk": 1,
+    "fields": {
+      "name": "Punjabi Dhaba",
+      "location": "Block 32 - Ground Floor",
+      "description": "Authentic Punjabi food including dal makhani, chole, parathas and lassi.",
+      "is_open": true,
+      "owner": null,
+      "image": ""
+    }
+  },
+  {
+    "model": "orders.foodstall",
+    "pk": 2,
+    "fields": {
+      "name": "South Indian Corner",
+      "location": "Block 34 - Canteen",
+      "description": "Idli, dosa, vada, sambar and filter coffee.",
+      "is_open": true,
+      "owner": null,
+      "image": ""
+    }
+  },
+  {
+    "model": "orders.foodstall",
+    "pk": 3,
+    "fields": {
+      "name": "Quick Bites",
+      "location": "Main Building - Ground Floor",
+      "description": "Sandwiches, burgers, wraps, juices and snacks for quick hunger fixes.",
+      "is_open": true,
+      "owner": null,
+      "image": ""
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 1,
+    "fields": {
+      "stall": 1,
+      "name": "Dal Makhani",
+      "description": "Creamy black lentil curry served with rice or roti",
+      "price": "60.00",
+      "category": "lunch",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 10
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 2,
+    "fields": {
+      "stall": 1,
+      "name": "Aloo Paratha",
+      "description": "Stuffed whole wheat flatbread with butter and pickle",
+      "price": "45.00",
+      "category": "breakfast",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 8
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 3,
+    "fields": {
+      "stall": 1,
+      "name": "Sweet Lassi",
+      "description": "Chilled sweet yogurt drink",
+      "price": "30.00",
+      "category": "beverages",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 3
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 4,
+    "fields": {
+      "stall": 2,
+      "name": "Masala Dosa",
+      "description": "Crispy dosa filled with spiced potato filling, served with sambar and chutney",
+      "price": "55.00",
+      "category": "breakfast",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 12
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 5,
+    "fields": {
+      "stall": 2,
+      "name": "Idli (3 pcs)",
+      "description": "Soft steamed rice cakes with sambar and coconut chutney",
+      "price": "35.00",
+      "category": "breakfast",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 5
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 6,
+    "fields": {
+      "stall": 2,
+      "name": "Filter Coffee",
+      "description": "Traditional South Indian filter coffee",
+      "price": "25.00",
+      "category": "beverages",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 4
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 7,
+    "fields": {
+      "stall": 3,
+      "name": "Veg Burger",
+      "description": "Crispy veg patty burger with lettuce, tomato and mayo",
+      "price": "50.00",
+      "category": "snacks",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 7
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 8,
+    "fields": {
+      "stall": 3,
+      "name": "Veg Sandwich",
+      "description": "Grilled sandwich with cheese, cucumber and tomato",
+      "price": "40.00",
+      "category": "snacks",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 5
+    }
+  },
+  {
+    "model": "orders.fooditem",
+    "pk": 9,
+    "fields": {
+      "stall": 3,
+      "name": "Fresh Lime Soda",
+      "description": "Refreshing lime with soda and mint",
+      "price": "20.00",
+      "category": "beverages",
+      "is_available": true,
+      "image": "",
+      "preparation_time": 2
+    }
+  }
+]

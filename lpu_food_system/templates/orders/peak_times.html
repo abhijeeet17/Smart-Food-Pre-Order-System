@@ -1,0 +1,63 @@
+{% extends 'orders/base.html' %}
+
+{% block title %}Peak Times | LPU Food System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h2 class="fw-bold mb-0"><i class="bi bi-clock-history me-2"></i>Peak Order Times</h2>
+    <p class="mb-0 opacity-75">Real-time slot availability &amp; AI demand forecast for {{ today }}</p>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <div class="row g-4">
+    {% for info in slot_info %}
+    <div class="col-md-6">
+      <div class="card p-4 h-100 {% if info.is_peak %}border-warning{% endif %}">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h5 class="fw-bold mb-0">{{ info.slot.get_slot_time_display }}</h5>
+            <small class="text-muted">Max capacity: {{ info.slot.max_capacity }} students</small>
+          </div>
+          {% if info.is_peak %}
+            <span class="badge bg-warning text-dark"><i class="bi bi-fire me-1"></i>Peak</span>
+          {% else %}
+            <span class="badge bg-success">Available</span>
+          {% endif %}
+        </div>
+
+        <div class="row text-center mb-3">
+          <div class="col-6">
+            <div class="fw-bold fs-3 text-primary">{{ info.current_orders }}</div>
+            <small class="text-muted">Current Orders</small>
+          </div>
+          <div class="col-6">
+            <div class="fw-bold fs-3 text-warning">{{ info.predicted }}</div>
+            <small class="text-muted">AI Prediction</small>
+          </div>
+        </div>
+
+        <label class="form-label small mb-1">Slot Occupancy</label>
+        <div class="progress mb-1" style="height:12px; border-radius:6px;">
+          <div class="progress-bar {% if info.percentage > 75 %}bg-danger{% elif info.percentage > 50 %}bg-warning{% else %}bg-success{% endif %}"
+               style="width: {{ info.percentage }}%;" role="progressbar">
+          </div>
+        </div>
+        <small class="text-muted">{{ info.percentage }}% full</small>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="card mt-4 p-4">
+    <h5 class="fw-bold"><i class="bi bi-robot me-2"></i>About AI Demand Prediction</h5>
+    <p class="text-muted mb-0">
+      Our system uses <strong>Linear Regression</strong> (scikit-learn) trained on historical order data
+      to predict how busy each time slot will be. Predictions consider the day of the week,
+      time slot, and historical trends — helping both students choose less crowded slots
+      and stall owners prepare the right amount of food.
+    </p>
+  </div>
+</div>
+{% endblock %}
