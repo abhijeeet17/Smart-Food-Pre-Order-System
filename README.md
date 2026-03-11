@@ -313,21 +313,11 @@ Visit: `http://127.0.0.1:8000/`
 - Loyalty points
 - Monthly meal plans
 
-## 👨‍💻 Development
 
-**LPU Project II**
-- Student: [Your Name]
-- Course: Python and Full Stack
-- University: Lovely Professional University
-
-## 📄 License
-
-Created for educational purposes - LPU Project II
-
----
 
 **Made with ❤️ for LPU Project II - Smart Food Pre-Ordering System**
 
 *Reducing Campus Crowd Through Smart Technology*
 ﻿# Smart-Food-Pre-Order-System
+
 
